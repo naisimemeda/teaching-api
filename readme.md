@@ -1,6 +1,11 @@
-### Teaching 
+### Teaching-Api
 
-- 基于Laravel 5.5 LTS和 Laravel Passport Line 第三方登陆, WebSocket 基于 Pusher, 前后端分离使用 Vue, 前端仓库地址 [teaching](https://github.com/naisimemeda/teaching)
+- 基于Laravel 5.5 LTS和 Laravel Passport Line 第三方登陆, WebSocket 基于 Pusher, 使用 Vue 前后端分离，前端仓库地址 [teaching](https://github.com/naisimemeda/teaching) 。
+
+### 主要功能
+
+- 接入 Line 登陆以及消息通知
+- 基于 Pusher 实现教师与学生聊天
 
 ## 主要扩展包使用
 
@@ -17,8 +22,13 @@
 - 以下基于 docker-compose 部署
 ```
 git clone https://github.com/naisimemeda/teaching-api.git
+```
 
-copy .env.example .env
+
+**拷贝`.env`文件**
+
+```shell script
+cp .env.exmaple .env
 ```
 
 docker-compose.yml  配置:  
@@ -31,7 +41,6 @@ DB_PASSWORD=
 ```
 .env 配置:  
 配置 `Email`:  
-
 ``` 
 MAIL_DRIVER=
 MAIL_HOST=
@@ -43,7 +52,7 @@ MAIL_FROM_ADDRESS=xxx@gmail.com
 MAIL_FROM_NAME=test
 ```
 
-配置 `Pusher`: 
+配置 `Pusher` 参考 [Pusher API](https://pusher.com/docs/channels)
 ``` 
 PUSHER_APP_ID=
 PUSHER_APP_KEY=
@@ -51,32 +60,20 @@ PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=eu
 ```
 
-配置 `Pusher`: 
-``` 
-PUSHER_APP_ID=
-PUSHER_APP_KEY=
-PUSHER_APP_SECRET=
-PUSHER_APP_CLUSTER=eu
-```
-
-配置 `Line`: 
+配置 `Line`:  参考 Line 官方文档[Line](https://developers.line.biz/en/docs/line-login/integrate-line-login/#verify-id-token) 
 ``` 
 LINE_KEY=
 LINE_SECRET=
 LINE_REDIRECT_URI=
 ```
 
-配置 `Line Channel`: 
+配置 `Line Channel`: 参考 Line Messaging 官方文档[Line Messaging](https://developers.line.biz/en/docs/messaging-api/getting-started/#creating-a-channel) 
 ``` 
 LINE_CHANNEL=
 LINE_CHANNEL_SECRET=
 ```
 
-配置 `前端地址`: 
-``` 
-WEB_URL=
-```
-配置 `七牛云`: 
+配置 `七牛云`:  参考 七牛云 官方文档 [qiniu](https://developer.qiniu.com/kodo) 
 ``` 
 QINIU_ACCESS_KEY=
 QINIU_SECRET_KEY=
@@ -84,6 +81,12 @@ QINIU_BUCKET=
 QINIU_DOMAIN=
 QINIU_CDN=
 ```
+
+配置 `前端地址`: 
+``` 
+WEB_URL=
+```
+
 
 - 配置nginx：docker/vhost.conf
 - 启动项目
@@ -111,4 +114,6 @@ client_secret=
 
 执行队列任务
 php artisan queue:work
+
+访问 http://localhost 或者在 hosts 里面配置上面 vhost.conf 的域名, 使用域名访问
 ```
