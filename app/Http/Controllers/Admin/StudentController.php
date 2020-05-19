@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\sendMessageEvent;
+use App\Events\SendMessageEvent;
 use App\Http\Requests\StudentRequest;
 use App\Models\School;
 use App\Models\SchoolTeacher;
@@ -65,7 +65,7 @@ class StudentController extends Controller
 //    {
 //        $student = Student::query()->find($request->get('student_id'));
 //
-//        event(new sendMessageEvent($student, Auth::user(), 'teacher', Auth::id(), '1111'));
+//        event(new SendMessageEvent($student, Auth::user(), 'teacher', Auth::id(), '1111'));
 //
 //        return $this->success('成功');
 //    }

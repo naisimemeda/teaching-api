@@ -187,25 +187,6 @@ class AuthController extends Controller
         return $this->getBearerTokenByUser($auth, 1, false, $provider);
     }
 
-
-//    public function reply(Request $request)
-//    {
-//        $LineBot = new LINEBot(
-//        );
-//
-//        $Response = $LineBot->createChannelAccessToken('1654214915');
-//        $channel_access_token = $Response->getJSONDecodedBody();
-//        $access_token = array_get($channel_access_token, 'access_token');
-//
-//        $input = $request->all();
-//
-//        $reply_token = array_get($input, 'events.0.replyToken');
-//
-//        $textMessageBuilder = new TextMessageBuilder('qqq');
-//        $response = $LineBot->replyMessage($reply_token, $textMessageBuilder);
-//        return $this->success('成功');
-//    }
-
     /** 验证是否允许加入私人频道
      * @param Request $request
      * @return JsonResponse

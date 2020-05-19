@@ -2,11 +2,8 @@
 
 namespace App\Admin\Actions;
 
-use App\Events\adminMessageEvent;
-use App\Events\PublicEvent;
-use App\Events\sendMessageEvent;
+use App\Events\AdminMessageEvent;
 use App\Services\chatService;
-use App\Services\LineService;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -21,7 +18,7 @@ class AdminMessage extends RowAction
         $type = $request->get('type');
         $receive_type = $request->get('receive_type');
         if ($type[0] == 'web') {
-            event(new adminMessageEvent($message, 'admin', $receive_type, $model->id));
+            event(new AdminMessageEvent($message, 'admin', $receive_type, $model->id));
         } else {
             app(chatService::class)->lineNotification($message, $model->line_id);
         }

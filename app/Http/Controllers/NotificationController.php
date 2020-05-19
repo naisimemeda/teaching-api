@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PublicEvent;
-use App\Events\sendMessageEvent;
+use App\Events\SendMessageEvent;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Services\chatService;

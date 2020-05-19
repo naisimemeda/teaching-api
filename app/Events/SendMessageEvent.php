@@ -9,45 +9,57 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class adminMessageEvent implements ShouldBroadcast, ShouldQueue
+class SendMessageEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
 
+    public $send_id;
+
     private $receive_id;
 
     public $send_type;
 
-    public $receive_type;
+    public $avatar_url;
+
+    public $name;
+
     public $created_at;
 
     /**
-     * sendMessageEvent constructor.
+     * SendMessageEvent constructor.
      * @param string $message 消息
-     * @param string $send_type
-     * @param string $receive_type
+     * @param int $send_id  发送者ID
+     * @param string $send_type 发送者类型 student/teacher
+     * @param Model $user
      * @param int $receive_id
      */
-    public function __construct(string $message, string $send_type, string $receive_type, int $receive_id)
+    public function __construct(string $message, int $send_id, string $send_type, Model $user, int $receive_id)
     {
         $this->message = $message;
 
+        $this->send_id = $send_id;
+
         $this->send_type = $send_type;
 
-        $this->receive_type = $receive_type;
-
         $this->receive_id = $receive_id;
+
+        if ($user != null) {
+            $this->avatar_url = $user->avatar_url;
+
+            $this->name = $user->name;
+        }
 
         $this->created_at = now()->toDateTimeString();
     }
 
     public function broadcastOn()
     {
-        if ($this->receive_type == 'teacher') {
-            return ['private-teacher.' . $this->receive_id];
+        if ($this->send_type == 'teacher') {
+            return ['private-student.' . $this->receive_id];
         }
-        return ['private-student.' . $this->receive_id];
+        return ['private-teacher.' . $this->receive_id];
     }
 
     public function broadcastAs()

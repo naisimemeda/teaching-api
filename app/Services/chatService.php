@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Events\sendMessageEvent;
+use App\Events\SendMessageEvent;
 use App\Models\ChatLog;
 use App\Models\Message;
 use App\Models\Student;
@@ -28,14 +28,13 @@ class chatService
         string $send_type,
         Model $auth,
         int $receive_id
-    ): array
-    {
+    ): array {
         ChatLog::query()->updateOrInsert([
             'student_id' => $send_type === 'teacher' ? $receive_id : $send_id,
             'teacher_id' => $send_type === 'student' ? $receive_id : $send_id
         ], ['created_at' => now()]);
 
-        event(new sendMessageEvent($message, $send_id, $send_type, $auth, $receive_id));
+        event(new SendMessageEvent($message, $send_id, $send_type, $auth, $receive_id));
 
         $send_message = [
             'send_id' => $send_id,

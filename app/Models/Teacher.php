@@ -17,14 +17,6 @@ class Teacher extends Authenticatable
         'password'
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-        static::saving(function ($model) {
-//            $model->line_avatar_url = config('filesystems.disks.qiniuadmin.http_url') . '/' . $model->line_avatar_url;
-        });
-    }
-
     public function fans()
     {
         return $this->belongsToMany(Student::class, 'followers')
