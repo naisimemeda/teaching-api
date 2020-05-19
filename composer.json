@@ -21,7 +21,8 @@
     "paragonie/random_compat": "2.*",
     "predis/predis": "^1.1",
     "pusher/pusher-php-server": "^4.1",
-    "socialiteproviders/line": "^2.1"
+    "socialiteproviders/line": "^2.1",
+    "fabpot/php-cs-fixer":"*"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.7",

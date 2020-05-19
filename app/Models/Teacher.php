@@ -23,7 +23,6 @@ class Teacher extends Authenticatable
         static::saving(function ($model) {
 //            $model->line_avatar_url = config('filesystems.disks.qiniuadmin.http_url') . '/' . $model->line_avatar_url;
         });
-
     }
 
     public function fans()

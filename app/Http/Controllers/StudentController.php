@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-
     public function me(Request $request)
     {
         return $this->success(Student::query()->find(Auth::id()));

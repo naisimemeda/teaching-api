@@ -27,9 +27,9 @@ class chatService
         int $send_id,
         string $send_type,
         Model $auth,
-        int $receive_id): array
+        int $receive_id
+    ): array
     {
-
         ChatLog::query()->updateOrInsert([
             'student_id' => $send_type === 'teacher' ? $receive_id : $send_id,
             'teacher_id' => $send_type === 'student' ? $receive_id : $send_id

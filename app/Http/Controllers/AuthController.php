@@ -39,7 +39,6 @@ class AuthController extends Controller
             return $this->getBearerTokenByUser($teacher, 1, false, 'teacher');
         });
         return $this->success($token);
-
     }
 
     /**
@@ -89,7 +88,6 @@ class AuthController extends Controller
      */
     public function callback(Request $request, LineService $lineService)
     {
-
         $user = Socialite::driver('line')->user();
         $accessTokenResponseBody = $user->accessTokenResponseBody;
 
@@ -136,7 +134,6 @@ class AuthController extends Controller
         ];
         Cache::put($key, json_encode($data, true), 30);
         return redirect(config('app.web_url') . "#/provider?key=$key");
-
     }
 
 
@@ -188,7 +185,6 @@ class AuthController extends Controller
         }
 
         return $this->getBearerTokenByUser($auth, 1, false, $provider);
-
     }
 
 

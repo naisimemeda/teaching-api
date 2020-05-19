@@ -34,7 +34,6 @@ class SchoolController extends Controller
      */
     public function option(Request $request)
     {
-
         $teacher = Auth::user();
         $school = $teacher->school()->where('status', true)->select('id', 'name')->get();
         return $this->success($school);
@@ -61,6 +60,4 @@ class SchoolController extends Controller
 
         return $this->success('成功');
     }
-
-
 }

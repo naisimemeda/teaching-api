@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 
 class TeacherController extends Controller
 {
-
     public function me(Request $request)
     {
         return $this->success(\Auth::user());

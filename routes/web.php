@@ -16,4 +16,3 @@ Route::any('line/callback', 'AuthController@callback');
 Route::any('send', 'AuthController@send');
 
 Route::post('admin/notification', 'NotificationController@sendNotification');
-

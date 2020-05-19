@@ -24,10 +24,8 @@ use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Support\Str as FacadeStr;
 
-
 trait PassportToken
 {
-
     protected $identifier;
 
     /**
@@ -129,7 +127,6 @@ trait PassportToken
      */
     protected function getBearerTokenByUser(Model $user, int $clientId, $output, string $provider): array
     {
-
         $passportToken = $this->createPassportTokenByUser($user, $clientId);
 
         $this->identifier = collect(Arr::first($passportToken))->first();
@@ -144,7 +141,6 @@ trait PassportToken
         $this->setTokenProvider($this->identifier, $provider, $user, $clientId);
 
         return $bearerToken;
-
     }
 
     /**
@@ -175,6 +171,5 @@ trait PassportToken
 //            'updated_at' => $now,
 //            'expires_at' => $now
 //        ]);
-
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\adminMessage;
+use App\Admin\Actions\AdminMessage;
 use App\Models\School;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;

@@ -40,7 +40,6 @@ class adminMessageEvent implements ShouldBroadcast, ShouldQueue
         $this->receive_id = $receive_id;
 
         $this->created_at = now()->toDateTimeString();
-
     }
 
     public function broadcastOn()

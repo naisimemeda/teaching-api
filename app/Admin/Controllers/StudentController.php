@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\adminMessage;
+use App\Admin\Actions\AdminMessage;
 use App\Models\Student;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -48,7 +48,7 @@ class StudentController extends AdminController
         });
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new adminMessage);
+            $actions->add(new AdminMessage);
         });
         return $grid;
     }

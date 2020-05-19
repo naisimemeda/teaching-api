@@ -52,7 +52,6 @@ class sendMessageEvent implements ShouldBroadcast, ShouldQueue
         }
 
         $this->created_at = now()->toDateTimeString();
-
     }
 
     public function broadcastOn()

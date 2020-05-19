@@ -26,17 +26,13 @@ Route::group(['prefix' => '', 'middleware' => ['auth:api'], 'namespace' => 'Admi
     Route::get('schools', 'SchoolController@index')->name('school.index');
     //申请学校
     Route::post('schools', 'SchoolController@store')->name('school.store');
-
     Route::get('schools/option', 'SchoolController@option')->name('school.option');
-
     // 学生列表
     Route::get('schools/{school}/students', 'StudentController@schoolIndex')->name('student.index');
     // 教师列表
     Route::get('schools/{school}/teachers', 'TeacherController@schoolIndex')->name('student.index');
     // 添加学生
     Route::post('students', 'StudentController@store')->name('student.store');
-    // 老师 发送消息
-    Route::post('students/chat', 'StudentController@chat')->name('student.chat');
     // 邀请教师
     Route::post('schools/invite/teacher', 'TeacherController@inviteTeacher')->name('school.invite');
 
@@ -47,7 +43,6 @@ Route::group(['prefix' => '', 'middleware' => ['auth:api'], 'namespace' => 'Admi
     Route::get('chat/messages', 'ChatController@chatMessages')->name('chat.messages');
 
     Route::post('send/messages', 'ChatController@sendStudentChatMessage')->name('chat.send.message');
-
 });
 
 // 需要学生认证的接口

@@ -10,7 +10,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 
 class PassportCustomProviderAccessToken
 {
-
     private $server;
 
     public function __construct(ResourceServer $server)
@@ -39,10 +38,8 @@ class PassportCustomProviderAccessToken
                 }
             }
         } catch (\Exception $e) {
-
         }
 
         return $next($request);
     }
 }
-?>

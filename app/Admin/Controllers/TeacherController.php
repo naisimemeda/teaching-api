@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\adminMessage;
+use App\Admin\Actions\AdminMessage;
 use App\Admin\Extensions\Tools\Notification;
 use App\Models\Teacher;
 use Encore\Admin\Controllers\AdminController;
@@ -43,7 +43,7 @@ class TeacherController extends AdminController
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new adminMessage);
+            $actions->add(new AdminMessage);
         });
         return $grid;
     }
@@ -66,7 +66,6 @@ class TeacherController extends AdminController
                     'line_avatar_url' => config('filesystems.disks.qiniuadmin.http_url') . '/' . $teacher->line_avatar_url
                 ]);
             }
-
         });
         return $form;
     }

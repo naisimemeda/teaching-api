@@ -19,7 +19,7 @@ class ImageUploadHandler
 
         $filename = 'avatar' . time() . '_' . Str::random(10) . '.' . $extension;
 
-        if ( ! in_array($extension, $this->allowed_ext)) {
+        if (! in_array($extension, $this->allowed_ext)) {
             return false;
         }
 

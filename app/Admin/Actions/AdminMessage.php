@@ -11,7 +11,7 @@ use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class adminMessage extends RowAction
+class AdminMessage extends RowAction
 {
     public $name = '发送信息';
 

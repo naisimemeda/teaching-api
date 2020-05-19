@@ -8,5 +8,4 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatLog extends Model
 {
-
 }

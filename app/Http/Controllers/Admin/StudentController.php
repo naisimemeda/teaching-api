@@ -69,6 +69,4 @@ class StudentController extends Controller
 //
 //        return $this->success('成功');
 //    }
-
-
 }

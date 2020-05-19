@@ -1,7 +1,7 @@
 <?php
 function ngrok_url($routeName, $parameters = [])
 {
-    if(app()->environment('local') && $url = config('app.ngrok_url')) {
+    if (app()->environment('local') && $url = config('app.ngrok_url')) {
         return $url.route($routeName, $parameters, false);
     }
 

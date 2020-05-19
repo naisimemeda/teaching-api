@@ -32,6 +32,5 @@ class NotificationController extends Controller
             admin_toastr('推送信息失败', 'error');
         }
         return back();
-
     }
 }

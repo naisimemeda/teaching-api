@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use App\Models\School;
 use App\Models\SchoolTeacher;
 use App\Models\Student;

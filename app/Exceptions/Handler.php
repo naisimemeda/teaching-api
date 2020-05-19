@@ -39,7 +39,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Exception $exception)
     {
-
         if ($exception instanceof MethodNotAllowedHttpException) {
             if ($exception->getStatusCode() == 405) {
                 $method = strtolower($exception->getHeaders()['Allow']);
@@ -49,10 +48,9 @@ class Handler extends ExceptionHandler
             return Response()->json(['message' => 'allow method ' . $method], 405);
         }
 
-        if($exception instanceof NotFoundHttpException){
-            if($exception->getStatusCode() == 404) {
+        if ($exception instanceof NotFoundHttpException) {
+            if ($exception->getStatusCode() == 404) {
                 return Response()->json(['message' => 'not found'], 404);
-
             }
         }
 
