@@ -9,11 +9,11 @@ services:
       - ./:/var/www
     environment:
       - DB_CONNECTION=mysql
-      - DB_HOST=rm-2zey75z6sqkkip75nko.mysql.rds.aliyuncs.com
-      - DB_PORT=3306
-      - DB_DATABASE=teaching
-      - DB_USERNAME=nice
-      - DB_PASSWORD=Memedama2
+      - DB_HOST=.mysql.rds.aliyuncs.com
+      - DB_PORT=
+      - DB_DATABASE=
+      - DB_USERNAME=
+      - DB_PASSWORD=
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - TZ=Asia/Shanghai

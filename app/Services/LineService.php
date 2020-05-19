@@ -13,7 +13,6 @@ class LineService
      */
     public function getUserProfile($token): array
     {
-
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
