@@ -1,58 +1,114 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+### Teaching 
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+- 基于Laravel 5.5 LTS和 Laravel Passport Line 第三方登陆, WebSocket 基于 Pusher, 前后端分离使用 Vue, 前端仓库地址 [teaching](https://github.com/naisimemeda/teaching)
 
-## About Laravel
+## 主要扩展包使用
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+|扩展包|描述|使用场景|
+|---|---|---|
+|[laravel/passport](https://github.com/laravel/passport)| OAuth2 | 多表登陆, 以及第三方登陆 |
+|[linecorp/line-bot-sdk](https://github.com/line/line-bot-sdk-php)| Line 官方SDK | 消息通知 |
+|[socialiteproviders/line](https://github.com/SocialiteProviders/Line)| 接入 Line |实现第三方登陆|
+|[pusher/pusher-php-server](https://github.com/pusher/pusher-http-php)| 实现 WebSocket  | 广播通知、 私人频道 |
+|[encore/laravel-admin](https://github.com/z-song/laravel-admin)| 管理员后台 | 快速集成后台 |
+|[overtrue/laravel-filesystem-qiniu](https://github.com/overtrue/laravel-filesystem-qiniu)| 七牛云存储 | 替换 Laravel-admin disk 以及前台图片上传 |
+#### 部署
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 以下基于 docker-compose 部署
+```
+git clone https://github.com/naisimemeda/teaching-api.git
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+copy .env.example .env
+```
 
-## Learning Laravel
+docker-compose.yml  配置:  
+```
+DB_HOST=
+DB_PORT=
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+```
+.env 配置:  
+配置 `Email`:  
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+``` 
+MAIL_DRIVER=
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=xxx@gmail.com
+MAIL_FROM_NAME=test
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+配置 `Pusher`: 
+``` 
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=eu
+```
 
-## Laravel Sponsors
+配置 `Pusher`: 
+``` 
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=eu
+```
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+配置 `Line`: 
+``` 
+LINE_KEY=
+LINE_SECRET=
+LINE_REDIRECT_URI=
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+配置 `Line Channel`: 
+``` 
+LINE_CHANNEL=
+LINE_CHANNEL_SECRET=
+```
 
-## Contributing
+配置 `前端地址`: 
+``` 
+WEB_URL=
+```
+配置 `七牛云`: 
+``` 
+QINIU_ACCESS_KEY=
+QINIU_SECRET_KEY=
+QINIU_BUCKET=
+QINIU_DOMAIN=
+QINIU_CDN=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- 配置nginx：docker/vhost.conf
+- 启动项目
+```
+docker-compose up -d
 
-## Security Vulnerabilities
+进入容器
+docker-compose exec laravel bash
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+安装 composer
+composer install
 
-## License
+执行迁移
+php artisan migrate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+passport 生成
+php artisan passport:keys
+
+创建客户端
+php artisan passport:client --password --name='teaching'
+
+.env 配置客户端
+client_id=
+client_secret=
+
+执行队列任务
+php artisan queue:work
+```
