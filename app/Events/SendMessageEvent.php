@@ -13,19 +13,19 @@ class SendMessageEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public string $message;
 
-    public $send_id;
+    public int $send_id;
 
-    private $receive_id;
+    private int $receive_id;
 
-    public $send_type;
+    public string $send_type;
 
-    public $avatar_url;
+    public string $avatar_url;
 
-    public $name;
+    public string $name;
 
-    public $created_at;
+    public string $created_at;
 
     /**
      * SendMessageEvent constructor.

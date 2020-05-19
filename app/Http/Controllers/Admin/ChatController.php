@@ -78,7 +78,7 @@ class ChatController extends Controller
             'teacher_id' => Auth::id()
         ], ['created_at' => now()]);
 
-        $send_message = $service->sendMessage($message, Auth::id(), 'teacher', $teacher, $student_id);
+        $send_message = $service->sendMessage($teacher, $student_id, $message, Auth::id(), AUTH_PROVIDER_TEACHER );
 
         return $this->success($send_message);
     }
@@ -100,7 +100,7 @@ class ChatController extends Controller
             'teacher_id' => $student->teacher_id
         ], ['created_at' => now()]);
 
-        $send_message = $service->sendMessage($message, Auth::id(), 'student', $student, $student->teacher_id);
+        $send_message = $service->sendMessage($student, $student->teacher_id, $message, Auth::id(), AUTH_PROVIDER_STUDENT );
 
         return $this->success($send_message);
     }

@@ -14,15 +14,15 @@ class AdminMessageEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public string $message;
 
-    private $receive_id;
+    private int $receive_id;
 
-    public $send_type;
+    public string $send_type;
 
-    public $receive_type;
+    public string $receive_type;
 
-    public $created_at;
+    public string $created_at;
 
     /**
      * SendMessageEvent constructor.

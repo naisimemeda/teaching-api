@@ -13,14 +13,14 @@ class LineService
      */
     public function getUserProfile($token): array
     {
-        $client = new Client();
+
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         ];
-        $response = $client->request('GET', 'https://api.line.me/v2/profile', [
-            'headers' => $headers
-        ]);
+
+        $response = (new Client)->get('https://api.line.me/v2/profile', compact('headers'));
+
         return json_decode($response->getBody()->getContents(), true);
     }
 }
