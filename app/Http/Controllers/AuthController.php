@@ -36,7 +36,7 @@ class AuthController extends Controller
             $avatar = collect(Student::$avatars)->random();
             $data = array_merge($request->only(['email', 'password', 'name']), ['avatar_url' => $avatar, 'line_avatar_url' => $avatar ]);
             $teacher = Teacher::query()->create($data);
-            return $this->getBearerTokenByUser($teacher, 1, false, 'teacher');
+            return $this->getBearerTokenByUser($teacher, config('app.passport_client_id'), false, AUTH_PROVIDER_TEACHER);
         });
         return $this->success($token);
     }
@@ -123,16 +123,19 @@ class AuthController extends Controller
             ]);
         }
 
-        if ($request->session()->get('type') == 'binding') {
+        if ($request->session()->get('type') === 'binding') {
             return redirect(config('app.web_url') . "#/");
         }
 
         $key = Str::random();
+
         $data = [
             'teacher' => Teacher::query()->where('line_id', $user_profile['userId'])->first(),
             'student' => Student::query()->where('line_id', $user_profile['userId'])->get()
         ];
+
         Cache::put($key, json_encode($data, true), 30);
+
         return redirect(config('app.web_url') . "#/provider?key=$key");
     }
 
@@ -169,17 +172,18 @@ class AuthController extends Controller
     public function lineAuth(AuthRequest $request)
     {
         $oauth = Cache::pull($request->get('oauth_key'));
+
         if (!$oauth) {
             return $this->failed('认证错误');
         }
 
         $provider = $request->get('provider');
-        switch ($request->get('provider')) {
-            case 'teacher':
-                $auth = Teacher::query()->find($request->get('id'));
 
+        switch ($request->get('provider')) {
+            case AUTH_PROVIDER_TEACHER:
+                $auth = Teacher::query()->find($request->get('id'));
                 break;
-            case 'student':
+            case AUTH_PROVIDER_STUDENT:
                 $auth = Student::query()->find($request->get('id'));
                 break;
         }
@@ -187,16 +191,21 @@ class AuthController extends Controller
         return $this->getBearerTokenByUser($auth, 1, false, $provider);
     }
 
-    /** 验证是否允许加入私人频道
+    /**
+     * 验证是否允许加入私人频道
      * @param Request $request
      * @return JsonResponse
      */
     public function validNotification(Request $request)
     {
         $secret = config('broadcasting.connections.pusher.secret');
+
         $string_to_sign = $request->get('socket_id') . ':' . $request->get('channel_name');
+
         $signature = hash_hmac('sha256', $string_to_sign, $secret);
+
         $auth = config('broadcasting.connections.pusher.key') . ':' . $signature;
+
         return response()->json(compact('auth'));
     }
 }

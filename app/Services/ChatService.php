@@ -12,7 +12,7 @@ use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
-class chatService
+class ChatService
 {
     /**
      * @param string $message

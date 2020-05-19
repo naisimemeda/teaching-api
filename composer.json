@@ -41,7 +41,8 @@
       "App\\": "app/"
     },
     "files": [
-      "bootstrap/helpers.php"
+      "bootstrap/helpers.php",
+      "bootstrap/enums.php"
     ]
   },
   "autoload-dev": {

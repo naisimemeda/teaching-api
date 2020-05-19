@@ -56,10 +56,10 @@ class SendMessageEvent implements ShouldBroadcast, ShouldQueue
 
     public function broadcastOn()
     {
-        if ($this->send_type == 'teacher') {
-            return ['private-student.' . $this->receive_id];
+        if ($this->send_type == AUTH_PROVIDER_TEACHER) {
+            return [STUDENT_PRIVATE_CHANNEL_PREFIX . $this->receive_id];
         }
-        return ['private-teacher.' . $this->receive_id];
+        return [TEACHER_PRIVATE_CHANNEL_PREFIX . $this->receive_id];
     }
 
     public function broadcastAs()

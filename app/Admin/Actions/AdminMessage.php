@@ -3,7 +3,7 @@
 namespace App\Admin\Actions;
 
 use App\Events\AdminMessageEvent;
-use App\Services\chatService;
+use App\Services\ChatService;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -20,10 +20,10 @@ class AdminMessage extends RowAction
         if ($type[0] == 'web') {
             event(new AdminMessageEvent($message, 'admin', $receive_type, $model->id));
         } else {
-            app(chatService::class)->lineNotification($message, $model->line_id);
+            app(ChatService::class)->lineNotification($message, $model->line_id);
         }
         if ($type[1] == 'line') {
-            app(chatService::class)->lineNotification($message, $model->line_id);
+            app(ChatService::class)->lineNotification($message, $model->line_id);
         }
         return $this->response()->success('Success message.')->refresh();
     }

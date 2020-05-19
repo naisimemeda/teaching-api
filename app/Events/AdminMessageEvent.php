@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
@@ -20,6 +21,7 @@ class AdminMessageEvent implements ShouldBroadcast, ShouldQueue
     public $send_type;
 
     public $receive_type;
+
     public $created_at;
 
     /**
@@ -44,10 +46,10 @@ class AdminMessageEvent implements ShouldBroadcast, ShouldQueue
 
     public function broadcastOn()
     {
-        if ($this->receive_type == 'teacher') {
-            return ['private-teacher.' . $this->receive_id];
+        if ($this->receive_type == AUTH_PROVIDER_TEACHER) {
+            return [TEACHER_PRIVATE_CHANNEL_PREFIX . $this->receive_id];
         }
-        return ['private-student.' . $this->receive_id];
+        return [STUDENT_PRIVATE_CHANNEL_PREFIX . $this->receive_id];
     }
 
     public function broadcastAs()

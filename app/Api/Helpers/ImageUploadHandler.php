@@ -19,19 +19,19 @@ class ImageUploadHandler
 
         $filename = 'avatar' . time() . '_' . Str::random(10) . '.' . $extension;
 
-        if (! in_array($extension, $this->allowed_ext)) {
+        if (!in_array($extension, $this->allowed_ext)) {
             return false;
         }
 
         $file->move($upload_path, $filename);
 
-        $path        = $upload_path . $filename;
-        $oss_upload  = $folder_name . $filename;
+        $path = $upload_path . $filename;
+        $oss_upload = $folder_name . $filename;
         $disk = Storage::disk('qiniu');
         $disk->put($oss_upload, fopen($path, 'r'));
         unlink($path);
         return [
-            'path' => 'http://' . env('QINIU_CDN') . '/'. $oss_upload
+            'path' => 'http://' . env('QINIU_CDN') . '/' . $oss_upload
         ];
     }
 }

@@ -8,7 +8,7 @@ use App\Models\ChatLog;
 use App\Models\Message;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Services\chatService;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -62,10 +62,10 @@ class ChatController extends Controller
     /**
      * 教师发送消息
      * @param MessageRequest $request
-     * @param chatService $service
+     * @param ChatService $service
      * @return mixed
      */
-    public function sendStudentChatMessage(MessageRequest $request, chatService $service)
+    public function sendStudentChatMessage(MessageRequest $request, ChatService $service)
     {
         $student_id = $request->get('student_id');
 
@@ -86,10 +86,10 @@ class ChatController extends Controller
     /**
      * 学生发送信息
      * @param MessageRequest $request
-     * @param chatService $service
+     * @param ChatService $service
      * @return mixed
      */
-    public function sendTeacherMessage(MessageRequest $request, chatService $service)
+    public function sendTeacherMessage(MessageRequest $request, ChatService $service)
     {
         $message = $request->get('message');
 

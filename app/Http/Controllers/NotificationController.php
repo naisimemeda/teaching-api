@@ -6,7 +6,7 @@ use App\Events\PublicEvent;
 use App\Events\SendMessageEvent;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Services\chatService;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use LINE\LINEBot;
@@ -15,7 +15,7 @@ use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
 class NotificationController extends Controller
 {
-    public function sendNotification(Request $request, chatService $service)
+    public function sendNotification(Request $request, ChatService $service)
     {
         $message = $request->get('messages');
         if (!$message) {

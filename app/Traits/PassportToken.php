@@ -133,7 +133,6 @@ trait PassportToken
 
         $bearerToken = $this->sendBearerTokenResponse($passportToken['access_token'], $passportToken['refresh_token']);
 
-
         if (! $output) {
             $bearerToken = json_decode($bearerToken->getBody()->__toString(), true);
         }
@@ -160,16 +159,5 @@ trait PassportToken
             'created_at' => $now,
             'updated_at' => $now,
         ]);
-
-//        DB::table('oauth_access_tokens')->insert([
-//            'id' => $identifier,
-//            'user_id' => $user->id,
-//            'client_id' => $clientId,
-//            'scopes' => '["*"]',
-//            'revoked' => 0,
-//            'created_at' => $now,
-//            'updated_at' => $now,
-//            'expires_at' => $now
-//        ]);
     }
 }
