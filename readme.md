@@ -39,7 +39,11 @@ DB_DATABASE=
 DB_USERNAME=
 DB_PASSWORD=
 ```
+
+配置 nginx：docker/vhost.conf  server_name 域名 ( 可选 )
+
 .env 配置:  
+
 配置 `Email`:  
 ``` 
 MAIL_DRIVER=
@@ -82,7 +86,7 @@ QINIU_DOMAIN=
 QINIU_CDN=
 ```
 
-配置 `前端地址`: 
+配置 `前端地址`:  用于 Line 回调时后端重定向至前端
 ``` 
 WEB_URL=
 ```
