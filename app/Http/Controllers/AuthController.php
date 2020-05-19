@@ -1,0 +1,224 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Kernel;
+use App\Http\Requests\AuthRequest;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Services\LineService;
+use App\Traits\PassportToken;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use Psr\Http\Message\ResponseInterface;
+
+class AuthController extends Controller
+{
+    use PassportToken;
+
+    /**
+     * 教师注册
+     * @param AuthRequest $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function store(AuthRequest $request)
+    {
+        $token = DB::transaction(function () use ($request) {
+            $data = array_merge($request->only(['email', 'password', 'name']), ['avatar_url' => collect(Student::$avatars)->random()]);
+            $teacher = Teacher::query()->create($data);
+            return $this->getBearerTokenByUser($teacher, 1, false, 'teacher');
+        });
+        return $this->success($token);
+
+    }
+
+    /**
+     * 获取令牌
+     * @param AuthRequest $request
+     * @return mixed
+     * @throws \Exception
+     */
+    public function login(AuthRequest $request)
+    {
+        try {
+            $url = request()->root() . '/oauth/token';
+
+            $params = array_merge(config('passport.proxy'), [
+                'username' => $request->get('email'),
+                'password' => $request->get('password'),
+                'provider' => $request->get('provider'),
+            ]);
+
+            $request = Request::create($url, 'POST', $params);
+
+            return app(Kernel::class)->handle($request);
+        } catch (RequestException $exception) {
+            return $this->failed('账号或密码错误');
+        }
+    }
+
+    /**
+     * line 登陆
+     * @param Request $request
+     * @return mixed
+     */
+    public function line(Request $request)
+    {
+        $request->session()->put('type', $request->get('type', 'binding'));
+        $request->session()->put('bind_type', $request->get('bind_type', 'teacher'));
+        $request->session()->put('id', $request->get('id'));
+        return Socialite::with('line')->redirect();
+    }
+
+
+    /**
+     * 用户登录回调
+     * @param Request $request
+     * @param LineService $lineService
+     * @return RedirectResponse|Redirector
+     */
+    public function callback(Request $request, LineService $lineService)
+    {
+
+        $user = Socialite::driver('line')->user();
+        $accessTokenResponseBody = $user->accessTokenResponseBody;
+
+        if (!isset($accessTokenResponseBody['access_token'])) {
+            $this->failed('认证失败', 404);
+        }
+
+        $user_profile = $lineService->getUserProfile($accessTokenResponseBody['access_token']);
+        if (empty($user_profile)) {
+            $this->failed('认证失败', 404);
+        }
+
+        $bind_type = $request->session()->get('bind_type');
+
+        switch ($bind_type) {
+            case 'teacher':
+                $teacher = Teacher::query()->where('line_id', $user_profile['userId'])->first();
+                if (!$teacher) {
+                    $query = Teacher::query()->find($request->session()->get('id'));
+                }
+                break;
+            case 'student':
+                $query = Student::query()->find($request->session()->get('id'));
+                break;
+        }
+
+        if (isset($query)) {
+            $query->update([
+                'line_name' => $user_profile['displayName'],
+                'line_avatar_url' => $user_profile['pictureUrl'],
+                'avatar_url' => $user_profile['pictureUrl'],
+                'line_id' => $user_profile['userId']
+            ]);
+        }
+
+        if ($request->session()->get('type') == 'binding') {
+            return redirect(config('app.web_url') . "#/");
+        }
+
+        $key = Str::random();
+        $data = [
+            'teacher' => Teacher::query()->where('line_id', $user_profile['userId'])->first(),
+            'student' => Student::query()->where('line_id', $user_profile['userId'])->get()
+        ];
+        Cache::put($key, json_encode($data, true), 30);
+        return redirect(config('app.web_url') . "#/provider?key=$key");
+
+    }
+
+
+    /**
+     * 获取 line 绑定的 teacher and student
+     * @param Request $request
+     * @return mixed
+     */
+    public function lineAccountList(Request $request)
+    {
+        $account = Cache::pull($request->get('key'));
+
+        if (!$account) {
+            return $this->failed('未绑定 Line ');
+        }
+
+        $oauth_key = Str::random();
+
+        Cache::put($oauth_key, true, 5);
+
+        return $this->success([
+            'account' => json_decode($account, true),
+            'oauth_key' => $oauth_key
+        ]);
+    }
+
+    /**
+     * line 第三方登陆
+     * @param AuthRequest $request
+     * @return AuthController|mixed|ResponseInterface
+     * @throws UniqueTokenIdentifierConstraintViolationException
+     */
+    public function lineAuth(AuthRequest $request)
+    {
+        $oauth = Cache::pull($request->get('oauth_key'));
+        if (!$oauth) {
+            return $this->failed('认证错误');
+        }
+
+        $provider = $request->get('provider');
+        switch ($request->get('provider')) {
+            case 'teacher':
+                $auth = Teacher::query()->find($request->get('id'));
+
+                break;
+            case 'student':
+                $auth = Student::query()->find($request->get('id'));
+                break;
+        }
+
+        return $this->getBearerTokenByUser($auth, 1, false, $provider);
+
+    }
+
+
+//    public function reply(Request $request)
+//    {
+//        $LineBot = new LINEBot(
+//        );
+//
+//        $Response = $LineBot->createChannelAccessToken('1654214915');
+//        $channel_access_token = $Response->getJSONDecodedBody();
+//        $access_token = array_get($channel_access_token, 'access_token');
+//
+//        $input = $request->all();
+//
+//        $reply_token = array_get($input, 'events.0.replyToken');
+//
+//        $textMessageBuilder = new TextMessageBuilder('qqq');
+//        $response = $LineBot->replyMessage($reply_token, $textMessageBuilder);
+//        return $this->success('成功');
+//    }
+
+    /** 验证是否允许加入私人频道
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function validNotification(Request $request)
+    {
+        $secret = config('broadcasting.connections.pusher.secret');
+        $string_to_sign = $request->get('socket_id') . ':' . $request->get('channel_name');
+        $signature = hash_hmac('sha256', $string_to_sign, $secret);
+        $auth = config('broadcasting.connections.pusher.key') . ':' . $signature;
+        return response()->json(compact('auth'));
+    }
+}

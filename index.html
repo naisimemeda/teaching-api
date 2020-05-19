@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+    <title>Pusher Test</title>
+</head>
+<body>
+<h1>Pusher Test</h1>
+<p>
+    Publish an event to channel <code>my-channel</code>
+    with event name <code>my-event</code>; it will appear below:
+</p>
+<div id="app">
+    <ul>
+        <li v-for="message in messages">
+            {{message}}
+        </li>
+    </ul>
+</div>
+
+<script src="https://js.pusher.com/6.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('202bc42dca137d276f5a', {
+        cluster: 'eu',
+        authEndpoint: 'http://www.hairpin.test/api/valid/notification',
+        auth: {
+            headers: {
+                'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI3OWI2MDU1OGVkMjJmZjIxYzlmN2I0MDI2MjAxMzAwZDc0YmU5ZDc1YmNiY2MwOWMzZTg0OWM2NDQ5YmRjMTY4MzdmYzNmYmFkMzdmZWEyIn0.eyJhdWQiOiIxIiwianRpIjoiYjc5YjYwNTU4ZWQyMmZmMjFjOWY3YjQwMjYyMDEzMDBkNzRiZTlkNzViY2JjYzA5YzNlODQ5YzY0NDliZGMxNjgzN2ZjM2ZiYWQzN2ZlYTIiLCJpYXQiOjE1ODkzNTM1ODAsIm5iZiI6MTU4OTM1MzU4MCwiZXhwIjoxNTkwNjQ5NTgwLCJzdWIiOiIzIiwic2NvcGVzIjpbIioiXX0.Tx_s5hT_E5IJMVhi92prmsSbwrI6OXLtZWatgt5zXVN07oLIQfS1Y11eWxNSFLEZPQo1u9bN2zRaDzbZbgv5cELwbW40r6unGpla6GZK8aVvJq00twt9Z0ORM3xHcjqI-od6axG7uPfP1rXDWDpoFSn0wtz4aKrffAjHCNW02tLFHaCpQAKcLvSWCZfdqmiPz688Q5dOKJwNDeJj6l8b2EXXR4PwVoD7K8zNoFO9u7B1mFL6ycQPaVbKeFeQmUSrokExx2UK5lWvdAwkmfDBidH94gHv946h6W8aiZY-0y3Z6AqPusVa-VI4YqrSHHFf3D5Pccqi37ULYqza6fdOesL5KLBPU2Fy8ejHfpiqmEvCDjf83XJLG4xeddFhLzT6jepsbZkGOwbh-qvJmnGJ57KB3ZilXCodUbomtiS9KX4Wr2qkKFKQnLwGWFpZr4AInIHWUUJXDxIKCfGO1Ie4Yikh0IezcDKUVS15k9DOiVpsAOyxR-3p6WOZyyjZ9TXhEEJYuDLoXFLYI79KmZaOe-nQyH7c5vHz2B7rrC0fgHcg0EGJHExEAygkonb-oKQTtZDURsGSVAtqf37T-gnnQ1yaF9A-QztWCXXp3w_J9AV45L1zUb5v0-o2TfouUGFHpPnb5Ki9SrEUXSnORbRJshwclIUQomGAgd4fKgyft84"
+            }
+        }
+    });
+
+    var channel = pusher.subscribe('private-student.18');
+    channel.bind('chat', function(data) {
+        app.messages.push(JSON.stringify(data));
+    });
+
+
+
+    // Vue application
+    const app = new Vue({
+        el: '#app',
+        data: {
+            messages: [],
+        },
+    });
+</script>
+</body>
