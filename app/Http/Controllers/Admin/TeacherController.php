@@ -53,13 +53,14 @@ class TeacherController extends Controller
     {
         $key = Str::random(10);
         $school_name = School::query()->where('id', $request->get('school_id'))->value('name');
-        Cache::put($key, ['email' => $request->get('email'), 'school_id' => $request->get('school_id')], 600);
-        $this->sendEmailConfirmationTo($key, $school_name);
+        $email = $request->get('email');
+        Cache::put($key, ['email' => $email, 'school_id' => $request->get('school_id')], 600);
+        $this->sendEmailConfirmationTo($email, $key, $school_name);
         return $this->success('成功');
     }
 
 
-    public function sendEmailConfirmationTo(string $key, string $school_name)
+    public function sendEmailConfirmationTo(string $email, string $key, string $school_name)
     {
         $view = 'emails.confirm';
         $data = [
@@ -67,7 +68,7 @@ class TeacherController extends Controller
         ];
         $from = '2514430140@qq.com';
         $name = '邀请您成为学校老师！请确认。';
-        $to = '2514430140@qq.com';
+        $to = $email;
         $subject = "邀请您成为学校老师！请确认。";
 
         Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {

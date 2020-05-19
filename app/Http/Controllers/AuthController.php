@@ -33,7 +33,8 @@ class AuthController extends Controller
     public function store(AuthRequest $request)
     {
         $token = DB::transaction(function () use ($request) {
-            $data = array_merge($request->only(['email', 'password', 'name']), ['avatar_url' => collect(Student::$avatars)->random()]);
+            $avatar = collect(Student::$avatars)->random();
+            $data = array_merge($request->only(['email', 'password', 'name']), ['avatar_url' => $avatar, 'line_avatar_url' => $avatar ]);
             $teacher = Teacher::query()->create($data);
             return $this->getBearerTokenByUser($teacher, 1, false, 'teacher');
         });
