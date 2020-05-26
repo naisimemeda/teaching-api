@@ -73,11 +73,6 @@ class ChatController extends Controller
 
         $teacher = Teacher::query()->find(Auth::id());
 
-        ChatLog::query()->updateOrInsert([
-            'student_id' => $request->get('student_id'),
-            'teacher_id' => Auth::id()
-        ], ['created_at' => now()]);
-
         $send_message = $service->sendMessage($teacher, $student_id, $message, Auth::id(), AUTH_PROVIDER_TEACHER);
 
         return $this->success($send_message);
@@ -94,11 +89,6 @@ class ChatController extends Controller
         $message = $request->get('message');
 
         $student = Student::query()->find(Auth::id());
-
-        ChatLog::query()->updateOrInsert([
-            'student_id' => Auth::id(),
-            'teacher_id' => $student->teacher_id
-        ], ['created_at' => now()]);
 
         $send_message = $service->sendMessage($student, $student->teacher_id, $message, Auth::id(), AUTH_PROVIDER_STUDENT);
 

@@ -9,6 +9,8 @@ use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class SchoolController extends Controller
@@ -43,20 +45,29 @@ class SchoolController extends Controller
      * 申请学校
      * @param SchoolRequest $request
      * @return mixed
+     * @throws \Throwable
      */
     public function store(SchoolRequest $request)
     {
-        $teacher_id = Auth::id();
-        //创建学校
-        $school = new School([
-            'name' => $request->get('name'),
-            'cover' => $request->get('cover'),
-            'teacher_id' => $teacher_id,
-            'status' => false
-        ]);
-        $school->save();
+        try {
+            DB::transaction(function () use ($request) {
+                $teacher_id = Auth::id();
+                //创建学校
+                $school = new School([
+                    'name' => $request->get('name'),
+                    'cover' => $request->get('cover'),
+                    'teacher_id' => $teacher_id,
+                    'status' => false
+                ]);
+                $school->save();
 
-        $school->teacher()->attach(Auth::user(), ['is_admin' => true]);
+                $school->teacher()->attach(Auth::user(), ['is_admin' => true]);
+            });
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->failed('申请学校失败');
+        }
+
 
         return $this->success('成功');
     }

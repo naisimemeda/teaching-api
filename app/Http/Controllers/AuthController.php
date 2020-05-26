@@ -9,10 +9,12 @@ use App\Models\Teacher;
 use App\Services\LineService;
 use App\Traits\PassportToken;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -67,15 +69,51 @@ class AuthController extends Controller
     }
 
     /**
+     * 获取绑定 Line 时的 Token
+     * @param Request $request
+     * @return mixed
+     */
+    public function getLineBindToken(Request $request)
+    {
+        $key = Str::random(10);
+
+        Cache::put($key, Auth::id(), 600);
+
+        return $this->success(['key' => $key]);
+    }
+
+    /**
      * line 登陆
      * @param Request $request
      * @return mixed
      */
     public function line(Request $request)
     {
-        $request->session()->put('type', $request->get('type', 'binding'));
-        $request->session()->put('bind_type', $request->get('bind_type', 'teacher'));
-        $request->session()->put('id', $request->get('id'));
+        $bind_type = $request->get('type', 'binding');
+
+        if ($bind_type === 'binding') {
+
+            $key = $request->get('key');
+
+            if (!$id = Cache::pull($key)) {
+                return $this->failed('邀请码已过期');
+            }
+
+            $provider = $request->get('bind_type', 'teacher');
+
+            $query = $this->getQuery($provider);
+
+            $query->findOrFail($id);
+
+            $request->session()->put('id', $id);
+
+            $request->session()->put('bind_type', $provider);
+
+        }
+
+
+        $request->session()->put('type', $bind_type);
+
         return Socialite::with('line')->redirect();
     }
 
@@ -207,5 +245,17 @@ class AuthController extends Controller
         $auth = config('broadcasting.connections.pusher.key') . ':' . $signature;
 
         return response()->json(compact('auth'));
+    }
+
+    private function getQuery(string $provider): Builder
+    {
+
+        switch ($provider) {
+            case AUTH_PROVIDER_TEACHER:
+                return Teacher::query();
+            case AUTH_PROVIDER_STUDENT:
+                return Student::query();
+        }
+
     }
 }

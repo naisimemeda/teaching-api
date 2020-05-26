@@ -43,6 +43,9 @@ Route::group(['prefix' => '', 'middleware' => ['auth:api'], 'namespace' => 'Admi
     Route::get('chat/messages', 'ChatController@chatMessages')->name('chat.messages');
 
     Route::post('send/messages', 'ChatController@sendStudentChatMessage')->name('chat.send.message');
+
+    Route::get('line-binding/token', 'AuthController@getLineBindToken')->name('line.binding.token');
+
 });
 
 // 需要学生认证的接口

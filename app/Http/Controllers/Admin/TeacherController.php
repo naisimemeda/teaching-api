@@ -99,7 +99,8 @@ class TeacherController extends Controller
 
         SchoolTeacher::query()->create([
             'teacher_id' => $teacher->id,
-            'school_id' => $cache['school_id']
+            'school_id' => $cache['school_id'],
+            'is_admin' => false
         ]);
 
         return $this->success('成功');
